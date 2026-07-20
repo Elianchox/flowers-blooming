@@ -1,0 +1,16 @@
+{
+  "pin": "2307",
+  "theme": {
+    "colors": {
+      "pink-lightest": "#fff5f8",
+      "pink-light": "#fce4ec",
+      "pink-border": "#f8d0dc",
+      "pink-medium": "#f0b4c4",
+      "pink-primary": "#d4818c",
+      "pink-dark": "#c4707c",
+      "lavender-light": "#e8d5e0",
+      "lavender-dark": "#b08090",
+      "error": "#e57373"
+    }
+  }
+}
