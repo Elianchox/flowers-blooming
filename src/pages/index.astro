@@ -1,12 +1,10 @@
 ---
+import Base from '../layouts/Base.astro';
 ---
 
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta http-equiv="refresh" content="0;url=/lock-screen" />
-  <title>Redirecting...</title>
-</head>
-<body>
-</body>
-</html>
+<Base>
+  <fragment slot="head">
+    <meta http-equiv="refresh" content="0;url=/lock-screen" />
+    <title>Redirecting...</title>
+  </fragment>
+</Base>

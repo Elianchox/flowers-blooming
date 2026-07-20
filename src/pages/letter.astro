@@ -1,22 +1,21 @@
 ---
+import Base from '../layouts/Base.astro';
 ---
 
-<html lang="en" style="display: none">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width" />
-  <title>Carta</title>
-  <script>
-    (function() {
-      if (sessionStorage.getItem('unlocked')) {
-        document.documentElement.style.display = '';
-      } else {
-        window.location.replace('/lock-screen');
-      }
-    })();
-  </script>
-</head>
-<body>
-  <!-- Content will be added later -->
-</body>
-</html>
+<Base>
+  <fragment slot="head">
+    <title>Carta</title>
+    <script>
+      (function() {
+        if (sessionStorage.getItem('unlocked')) {
+          document.documentElement.style.display = '';
+        } else {
+          window.location.replace('/lock-screen');
+        }
+      })();
+    </script>
+  </fragment>
+  <fragment>
+    <!-- Content will be added later -->
+  </fragment>
+</Base>

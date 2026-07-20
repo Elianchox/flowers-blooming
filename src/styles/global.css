@@ -1,0 +1,21 @@
+@import "tailwindcss";
+
+@theme {
+  --color-pink-lightest: #fff5f8;
+  --color-pink-light: #fce4ec;
+  --color-pink-border: #f8d0dc;
+  --color-pink-medium: #f0b4c4;
+  --color-pink-primary: #d4818c;
+  --color-pink-dark: #c4707c;
+  --color-lavender-light: #e8d5e0;
+  --color-lavender-dark: #b08090;
+  --color-error: #e57373;
+
+  --animate-shake: shake 0.4s ease;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-8px); }
+  40%, 80% { transform: translateX(8px); }
+}
