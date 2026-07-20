@@ -8,8 +8,9 @@ import config from '../data/config.json';
     <title>LockScreen</title>
   </fragment>
 
-  <div class="min-h-screen flex items-center justify-center bg-linear-to-br from-pink-lightest to-pink-light select-none">
-    <div class="w-full text-center">
+  <div class="relative min-h-screen flex items-center justify-center select-none overflow-hidden" style="background: url('/bgs/botanical-pattern.webp') center/cover no-repeat;">
+    <div class="absolute inset-0 bg-linear-to-br from-pink-lightest/80 to-pink-light/80"></div>
+    <div class="relative w-full text-center z-10">
       <div class="text-5xl mb-2">🌸</div>
       <h1 class="text-pink-primary text-2xl font-semibold mb-1">Ingresa tu PIN</h1>
       <p class="text-pink-medium text-sm mb-7">4 dígitos</p>
