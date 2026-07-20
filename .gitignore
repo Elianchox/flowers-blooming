@@ -24,6 +24,8 @@ pnpm-debug.log*
 .idea/
 .agents
 docs
-.superpowers
 .opencode
 agentctl.lock.json
+
+# brainstorming visual companion mockups
+.superpowers/
