@@ -1,6 +1,9 @@
 ---
 import Base from '../layouts/Base.astro';
 import config from '../data/config.json';
+import { FLOWER_LIST } from '../data/flowers';
+
+const flowerSrcs = FLOWER_LIST.map((f) => f.src);
 ---
 
 <Base>
@@ -99,6 +102,90 @@ import config from '../data/config.json';
           showError();
         }
       }
+    });
+  </script>
+
+  <script define:vars={{ flowerSrcs }}>
+    const ANIMATION_CLASS = 'animate-spin';
+    const FLOWER_COUNT = 20;
+    const MIN_SIZE = 40;
+    const MAX_SIZE = 60;
+
+    function random(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function generatePositions(count) {
+      const perEdge = Math.floor(count / 4);
+      const remainder = count % 4;
+
+      const edgeCounts = [
+        perEdge + (remainder > 0 ? 1 : 0),
+        perEdge,
+        perEdge + (remainder > 1 ? 1 : 0),
+        perEdge,
+      ];
+
+      const margin = 3;
+      const positions = [];
+
+      const edges = [
+        { side: 'top', axis: 'left' },
+        { side: 'right', axis: 'top' },
+        { side: 'bottom', axis: 'left' },
+        { side: 'left', axis: 'top' },
+      ];
+
+      edges.forEach(({ side, axis }, i) => {
+        const n = edgeCounts[i];
+        for (let j = 0; j < n; j++) {
+          const pos = {};
+          if (side === 'top') {
+            pos.top = `${margin}%`;
+            pos.left = `${5 + (j + 0.5) * (90 / n)}%`;
+          } else if (side === 'bottom') {
+            pos.bottom = `${margin}%`;
+            pos.left = `${5 + (j + 0.5) * (90 / n)}%`;
+          } else if (side === 'right') {
+            pos.right = `${margin}%`;
+            pos.top = `${5 + (j + 0.5) * (90 / n)}%`;
+          } else {
+            pos.left = `${margin}%`;
+            pos.top = `${5 + (j + 0.5) * (90 / n)}%`;
+          }
+          positions.push(pos);
+        }
+      });
+
+      return positions;
+    }
+
+    const container = document.createElement('div');
+    container.id = 'flower-decoration';
+    container.style.cssText = [
+      'position: fixed',
+      'inset: 0',
+      'z-index: 0',
+      'pointer-events: none',
+      'overflow: hidden',
+    ].join(';');
+    document.body.appendChild(container);
+
+    const positions = generatePositions(FLOWER_COUNT);
+
+    positions.forEach((pos) => {
+      const img = document.createElement('img');
+      img.src = flowerSrcs[random(0, flowerSrcs.length - 1)];
+      img.className = ANIMATION_CLASS;
+      img.alt = '';
+      img.style.width = `${random(MIN_SIZE, MAX_SIZE)}px`;
+      img.style.height = 'auto';
+      img.style.position = 'absolute';
+      img.style.willChange = 'transform';
+
+      Object.assign(img.style, pos);
+
+      container.appendChild(img);
     });
   </script>
 </Base>

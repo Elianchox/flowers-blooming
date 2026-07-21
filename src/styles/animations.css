@@ -1,0 +1,39 @@
+@keyframes spin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+@keyframes float-brisa {
+  0%,
+  100% {
+    transform: translateY(0px) rotate(-1deg);
+  }
+  20% {
+    transform: translateY(-10px) rotate(1deg);
+  }
+  40% {
+    transform: translateY(-16px) rotate(-1deg);
+  }
+  60% {
+    transform: translateY(-6px) rotate(2deg);
+  }
+  80% {
+    transform: translateY(-12px) rotate(-1deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 3s linear infinite;
+}
+
+.animate-float-brisa {
+  animation: float-brisa 3.5s ease-in-out infinite;
+}
+
+.animate-both {
+  animation:
+    spin 3s linear infinite,
+    float-brisa 3.5s ease-in-out infinite;
+  animation-composition: add;
+}
