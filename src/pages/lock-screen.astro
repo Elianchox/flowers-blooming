@@ -106,10 +106,9 @@ const flowerSrcs = FLOWER_LIST.map((f) => f.src);
   </script>
 
   <script define:vars={{ flowerSrcs }}>
-    const ANIMATION_CLASS = 'animate-spin';
-    const FLOWER_COUNT = 20;
-    const MIN_SIZE = 40;
-    const MAX_SIZE = 60;
+    const FLOWER_COUNT = 14;
+    const MIN_SIZE = 60;
+    const MAX_SIZE = 120;
 
     function random(min, max) {
       return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -176,12 +175,12 @@ const flowerSrcs = FLOWER_LIST.map((f) => f.src);
     positions.forEach((pos) => {
       const img = document.createElement('img');
       img.src = flowerSrcs[random(0, flowerSrcs.length - 1)];
-      img.className = ANIMATION_CLASS;
       img.alt = '';
       img.style.width = `${random(MIN_SIZE, MAX_SIZE)}px`;
       img.style.height = 'auto';
       img.style.position = 'absolute';
       img.style.willChange = 'transform';
+      img.style.filter = 'drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15))';
 
       Object.assign(img.style, pos);
 
