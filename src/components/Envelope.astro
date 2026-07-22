@@ -1,0 +1,23 @@
+---
+interface Props {
+  closedSrc: string;
+  openedSrc: string;
+}
+const { closedSrc, openedSrc } = Astro.props;
+---
+
+<div id="envelopeSection" class="relative z-10 flex flex-col items-center">
+  <div class="relative flex items-center justify-center" style="width: 192px; min-height: 160px;">
+    <img id="envClosed"
+         src={closedSrc}
+         alt="Sobre cerrado"
+         class="w-48 h-auto animate-float-vertical cursor-pointer" />
+    <img id="envOpened"
+         src={openedSrc}
+         alt="Sobre abierto"
+         class="w-48 h-auto hidden absolute inset-0 object-contain" />
+  </div>
+  <p id="tapText" class="mt-6 text-pink-primary text-lg font-medium">
+    Toca para abrir
+  </p>
+</div>
