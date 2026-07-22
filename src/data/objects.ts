@@ -1,9 +1,10 @@
 import { readdirSync } from "node:fs";
 
+type FileNames = 'envelope-closed.webp' | 'envelope-opened.webp'
+
 export interface ObjectImage {
   src: string;
-  slug: string;
-  name: string;
+  name: FileNames;
 }
 
 const files = readdirSync("public/objects")
@@ -11,17 +12,12 @@ const files = readdirSync("public/objects")
   .map(
     (f): ObjectImage => ({
       src: `/objects/${f}`,
-      slug: f.replace(".webp", ""),
-      name: f
-        .replace(".webp", "")
-        .split("-")
-        .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-        .join(" "),
+      name: f as FileNames,
     }),
   );
 
 export const OBJECTS: Record<string, ObjectImage> = Object.fromEntries(
-  files.map((f) => [f.slug, f]),
+  files.map((f) => [f.name, f]),
 );
 
 export const OBJECT_LIST: ObjectImage[] = files;

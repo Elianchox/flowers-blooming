@@ -1,5 +1,11 @@
 ---
 import Base from '../layouts/Base.astro';
+import { OBJECT_LIST } from '../data/objects';
+import { FLOWER_LIST } from '../data/flowers';
+
+const closedEnvelope = OBJECT_LIST.find((o) => o.name === 'envelope-closed.webp');
+const openedEnvelope = OBJECT_LIST.find((o) => o.name === 'envelope-opened.webp');
+const flowerSrcs = FLOWER_LIST.map((f) => f.src);
 ---
 
 <Base>
@@ -16,6 +22,225 @@ import Base from '../layouts/Base.astro';
     </script>
   </fragment>
   <fragment>
-    <!-- Content will be added later -->
+    <div id="app" class="relative min-h-screen flex items-center justify-center select-none overflow-hidden"
+         style="background: url('/bgs/botanical-pattern.webp') center/cover no-repeat;">
+      <div class="absolute inset-0 bg-linear-to-br from-pink-lightest/80 to-pink-light/80"></div>
+
+      <!-- Envelope section -->
+      <div id="envelopeSection" class="relative z-10 flex flex-col items-center">
+        <div class="relative flex items-center justify-center" style="width: 192px; min-height: 160px;">
+          <img id="envClosed"
+               src={closedEnvelope?.src ?? ''}
+               alt="Sobre cerrado"
+               class="w-48 h-auto animate-float-vertical cursor-pointer" />
+          <img id="envOpened"
+               src={openedEnvelope?.src ?? ''}
+               alt="Sobre abierto"
+               class="w-48 h-auto hidden absolute inset-0 object-contain" />
+        </div>
+        <p id="tapText" class="mt-6 text-pink-primary text-lg font-medium">
+          Toca para abrir
+        </p>
+      </div>
+
+      <!-- Flower container (injected by JS) -->
+      <div id="flowerContainer"
+           class="fixed inset-0 overflow-hidden"
+           style="z-index: 5; pointer-events: none; display: none; background: linear-gradient(180deg, #c4707c 0%, #b06070 50%, #a04860 100%);">
+      </div>
+
+      <!-- Hello World overlay -->
+      <div id="helloOverlay"
+           class="fixed inset-0 z-20 flex items-center justify-center"
+           style="display: none;">
+        <h1 class="text-5xl font-bold text-pink-primary drop-shadow-lg">
+          Hello World
+        </h1>
+      </div>
+    </div>
   </fragment>
 </Base>
+
+<script define:vars={{ flowerSrcs }}>
+  const FLOWER_SIZE = 300;
+  const BURST_DURATION = 1000;
+
+  let isOpening = false;
+  let isOpen = false;
+  let flowersCreated = false;
+  let flowerElements = [];
+  const flowerContainer = document.getElementById('flowerContainer');
+  const envClosed = document.getElementById('envClosed');
+  const envOpened = document.getElementById('envOpened');
+  const tapText = document.getElementById('tapText');
+  const helloOverlay = document.getElementById('helloOverlay');
+
+  function generateFlowerPositions(flowerSize) {
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const spacingX = flowerSize * 0.4;
+    const spacingY = flowerSize * 0.4;
+    const startX = -flowerSize / 2;
+    const startY = -flowerSize / 2;
+    const cols = Math.ceil((vw + flowerSize) / spacingX) + 1;
+    const rows = Math.ceil((vh + flowerSize) / spacingY) + 1;
+
+    const positions = [];
+    for (let row = 0; row < rows; row++) {
+      const isOdd = row % 2 === 1;
+      for (let c = 0; c < cols; c++) {
+        const xPx = startX + c * spacingX + (isOdd ? spacingX / 2 : 0);
+        const yPx = startY + row * spacingY;
+        positions.push({ x: xPx, y: yPx });
+      }
+    }
+    return positions;
+  }
+
+  function createFlowers(positions, container, burstCenterX, burstCenterY) {
+    const centerX = burstCenterX;
+    const centerY = burstCenterY;
+
+    return positions.map((pos, i) => {
+      const flower = flowerSrcs[i % flowerSrcs.length];
+      const size = FLOWER_SIZE;
+      const spinDur = 2.5 + ((i * 3.7) % 1) * 4;
+      const opacity = 1;
+      const dx = pos.x - centerX+50;
+      const dy = pos.y - centerY+60;
+
+      const el = document.createElement('img');
+      el.src = flower;
+      el.alt = '';
+      el.className = 'absolute';
+      el.style.width = size + 'px';
+      el.style.height = 'auto';
+      el.style.left = pos.x + 'px';
+      el.style.top = pos.y + 'px';
+      el.style.transform = `translate(${centerX - pos.x}px, ${centerY - pos.y}px) scale(0.3) translate(-50%, -50%)`;
+      el.style.opacity = '0';
+      el.style.willChange = 'transform, opacity';
+      el.style.filter = 'drop-shadow(0 2px 6px rgba(80, 20, 40, 0.2))';
+      el.style.pointerEvents = 'none';
+      el.style.zIndex = Math.floor((i * 2.3) % 10);
+
+      el.dataset.dx = dx;
+      el.dataset.dy = dy;
+      el.dataset.spinDur = spinDur;
+      el.dataset.endOpacity = opacity;
+
+      container.appendChild(el);
+      return el;
+    });
+  }
+
+  function initFlowers(centerX, centerY) {
+    const positions = generateFlowerPositions(FLOWER_SIZE);
+    flowerElements = createFlowers(positions, flowerContainer, centerX, centerY);
+  }
+
+  function triggerBurst() {
+    const maxDist = Math.sqrt(
+      Math.pow(window.innerWidth, 2) + Math.pow(window.innerHeight, 2)
+    );
+
+    flowerElements.forEach((el, i) => {
+      const endOpacity = parseFloat(el.dataset.endOpacity);
+      const spinDur = parseFloat(el.dataset.spinDur);
+      const dx = parseFloat(el.dataset.dx);
+      const dy = parseFloat(el.dataset.dy);
+      const distance = Math.sqrt(dx * dx + dy * dy);
+      const normalizedDist = distance / maxDist;
+      const stagger = normalizedDist * 1000;
+
+      el.style.transition = [
+        `transform ${BURST_DURATION}ms cubic-bezier(0.22, 0.61, 0.36, 1) ${stagger}ms`,
+        `opacity ${BURST_DURATION * 0.6}ms ease ${stagger}ms`,
+      ].join(', ');
+      el.style.transform = 'translate(0, 0) scale(1) translate(0, 0)';
+      el.style.opacity = endOpacity;
+
+      const onEnd = (e) => {
+        if (e.propertyName !== 'transform') return;
+        el.removeEventListener('transitionend', onEnd);
+        el.style.transition = '';
+        el.style.animation = `spin-flower ${spinDur}s linear infinite`;
+        el.style.animationComposition = 'add';
+      };
+      el.addEventListener('transitionend', onEnd);
+    });
+  }
+
+  let burstCenterX = 0;
+  let burstCenterY = 0;
+
+  function handleOpen() {
+    if (isOpening || isOpen) return;
+    isOpening = true;
+
+    // Capture envelope position BEFORE any animation
+    const envRect = envClosed.getBoundingClientRect();
+    burstCenterX = envRect.left + envRect.width / 2;
+    burstCenterY = envRect.top + envRect.height / 2;
+
+    envClosed.classList.remove('animate-float-vertical');
+    void envClosed.offsetWidth;
+    envClosed.style.transition = 'transform 0.3s ease, opacity 0.2s ease';
+    envClosed.style.transform = 'rotate(-10deg)';
+
+    setTimeout(() => {
+      envClosed.style.opacity = '0';
+      envOpened.classList.remove('hidden');
+      envOpened.style.transition = 'opacity 0.2s ease';
+      envOpened.style.opacity = '1';
+      tapText.style.transition = 'opacity 0.2s ease';
+      tapText.style.opacity = '0';
+
+      if (!flowersCreated) {
+        initFlowers(burstCenterX, burstCenterY);
+        flowersCreated = true;
+      }
+      flowerContainer.style.display = 'block';
+
+      setTimeout(() => {
+        triggerBurst();
+
+        setTimeout(() => {
+          envOpened.style.transition = 'opacity 0.3s ease';
+          envOpened.style.opacity = '0';
+        }, 400);
+
+        const totalBurstTime = BURST_DURATION + 1000 + 200;
+        setTimeout(() => {
+          isOpen = true;
+          isOpening = false;
+          flowerContainer.style.pointerEvents = 'auto';
+        }, totalBurstTime);
+      }, 300);
+    }, 300);
+  }
+
+  document.getElementById('envelopeSection').addEventListener('click', (e) => {
+    if (!isOpen && !isOpening) {
+      handleOpen();
+    }
+  });
+
+  flowerContainer.addEventListener('click', () => {
+    if (!isOpen || isOpening) return;
+
+    flowerElements.forEach((el) => {
+      el.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+      el.style.opacity = '0';
+      el.style.transform = 'scale(0.5)';
+    });
+
+    setTimeout(() => {
+      helloOverlay.style.display = 'flex';
+      helloOverlay.style.opacity = '0';
+      helloOverlay.offsetHeight;
+      helloOverlay.style.transition = 'opacity 0.5s ease';
+      helloOverlay.style.opacity = '1';
+    }, 500);
+  });
+</script>
