@@ -1,5 +1,3 @@
-// src/scripts/burst-engine.ts
-
 export interface Position {
   x: number;
   y: number;
@@ -10,8 +8,8 @@ export function generateFlowerPositions(
   vw: number,
   vh: number,
 ): Position[] {
-  const spacingX = flowerSize * 0.4;
-  const spacingY = flowerSize * 0.4;
+  const spacingX = flowerSize * 0.6;
+  const spacingY = flowerSize * 0.6;
   const startX = -flowerSize / 2;
   const startY = -flowerSize / 2;
   const cols = Math.ceil((vw + flowerSize) / spacingX) + 1;
@@ -29,27 +27,59 @@ export function generateFlowerPositions(
   return positions;
 }
 
+const PADDING = 20;
+const GAP = 20;
+const CELL_W = 1244;
+const CELL_H = 1110;
+const COLS = 3;
+const SPRITE_W = 3812;
+const SPRITE_H = 3410;
+const SPRITE_SRC = '/flowers/flowers-grid.webp';
+
+function getSpriteStyle(flowerIndex: number, displayWidth: number) {
+  const col = flowerIndex % COLS;
+  const row = Math.floor(flowerIndex / COLS);
+  const contentW = CELL_W - 2;
+  const contentH = CELL_H - 2;
+  const cellX = PADDING + col * (CELL_W + GAP) + 1;
+  const cellY = PADDING + row * (CELL_H + GAP) + 1;
+  const scale = displayWidth / contentW;
+  const displayHeight = contentH * scale;
+
+  return {
+    width: `${displayWidth}px`,
+    height: `${displayHeight}px`,
+    backgroundImage: `url(${SPRITE_SRC})`,
+    backgroundRepeat: 'no-repeat' as const,
+    backgroundPosition: `${-(cellX * scale)}px ${-(cellY * scale)}px`,
+    backgroundSize: `${SPRITE_W * scale}px ${SPRITE_H * scale}px`,
+  };
+}
+
 export function createFlowerElements(
   positions: Position[],
   container: HTMLElement,
   center: Position,
-  flowerSrcs: string[],
+  flowerIndices: number[],
   flowerSize: number,
 ): HTMLElement[] {
   return positions.map((pos, i) => {
-    const flower = flowerSrcs[i % flowerSrcs.length];
+    const idx = flowerIndices[i % flowerIndices.length];
     const spinDur = 2.5 + ((i * 3.7) % 1) * 4;
     const dx = pos.x - center.x + 50;
     const dy = pos.y - center.y + 60;
+    const style = getSpriteStyle(idx, flowerSize);
 
-    const el = document.createElement('img');
-    el.src = flower;
-    el.alt = '';
+    const el = document.createElement('div');
     el.className = 'absolute';
-    el.style.width = flowerSize + 'px';
-    el.style.height = 'auto';
+    el.style.width = style.width;
+    el.style.height = style.height;
     el.style.left = pos.x + 'px';
     el.style.top = pos.y + 'px';
+    el.style.backgroundImage = style.backgroundImage;
+    el.style.backgroundRepeat = style.backgroundRepeat;
+    el.style.backgroundPosition = style.backgroundPosition;
+    el.style.backgroundSize = style.backgroundSize;
     el.style.transform = `translate(${center.x - pos.x}px, ${center.y - pos.y}px) scale(0.3) translate(-50%, -50%)`;
     el.style.opacity = '0';
     el.style.willChange = 'transform, opacity';

@@ -8,7 +8,7 @@ import { FLOWER_LIST } from '../data/flowers';
 
 const closedEnvelope = OBJECT_LIST.find((o) => o.name === 'envelope-closed.webp');
 const openedEnvelope = OBJECT_LIST.find((o) => o.name === 'envelope-opened.webp');
-const flowerSrcs = FLOWER_LIST.map((f) => f.src);
+const flowerIndices = FLOWER_LIST.map((f) => f.spriteIndex);
 ---
 
 <Base>
@@ -36,22 +36,23 @@ const flowerSrcs = FLOWER_LIST.map((f) => f.src);
   </fragment>
 </Base>
 
-<script define:vars={{ flowerSrcs }}>
-  window.__flowerSrcs = flowerSrcs;
+<script define:vars={{ flowerIndices }}>
+  window.__flowerIndices = flowerIndices;
 </script>
 
 <script>
 import { generateFlowerPositions, createFlowerElements, triggerBurst } from '../scripts/burst-engine';
 
-  const FLOWER_SIZE = 300;
+  const FLOWER_SIZE = 200;
   const BURST_DURATION = 1000;
-  const flowerSrcs = (window as unknown as { __flowerSrcs: string[] }).__flowerSrcs;
+  const flowerIndices = (window as unknown as { __flowerIndices: number[] }).__flowerIndices;
 
   let isOpening = false;
   let isOpen = false;
   let flowersCreated = false;
   let flowerElements: HTMLElement[] = [];
   const flowerContainer = document.getElementById('flowerContainer')!;
+  const dismissBackdrop = document.getElementById('dismissBackdrop')!;
   const envClosed = document.getElementById('envClosed') as HTMLImageElement;
   const envOpened = document.getElementById('envOpened') as HTMLImageElement;
   const tapText = document.getElementById('tapText')!;
@@ -80,7 +81,7 @@ import { generateFlowerPositions, createFlowerElements, triggerBurst } from '../
 
       if (!flowersCreated) {
         const positions = generateFlowerPositions(FLOWER_SIZE, window.innerWidth, window.innerHeight);
-        flowerElements = createFlowerElements(positions, flowerContainer, { x: burstCenterX, y: burstCenterY }, flowerSrcs, FLOWER_SIZE);
+        flowerElements = createFlowerElements(positions, flowerContainer, { x: burstCenterX, y: burstCenterY }, flowerIndices, FLOWER_SIZE);
         flowersCreated = true;
       }
       flowerContainer.style.display = 'block';
@@ -97,7 +98,7 @@ import { generateFlowerPositions, createFlowerElements, triggerBurst } from '../
         setTimeout(() => {
           isOpen = true;
           isOpening = false;
-          flowerContainer.style.pointerEvents = 'auto';
+          dismissBackdrop.style.pointerEvents = 'auto';
         }, totalBurstTime);
       }, 300);
     }, 300);
@@ -109,16 +110,19 @@ import { generateFlowerPositions, createFlowerElements, triggerBurst } from '../
     }
   });
 
-  flowerContainer.addEventListener('click', () => {
+  dismissBackdrop.addEventListener('click', () => {
     if (!isOpen || isOpening) return;
 
     flowerElements.forEach((el) => {
+      el.style.animation = '';
+      el.style.animationComposition = '';
       el.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
       el.style.opacity = '0';
       el.style.transform = 'scale(0.5)';
     });
 
     setTimeout(() => {
+      flowerContainer.style.display = 'none';
       helloOverlay.style.display = 'flex';
       helloOverlay.style.opacity = '0';
       helloOverlay.offsetHeight;

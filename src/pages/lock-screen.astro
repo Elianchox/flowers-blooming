@@ -3,7 +3,7 @@ import Base from '../layouts/Base.astro';
 import config from '../data/config.json';
 import { FLOWER_LIST } from '../data/flowers';
 
-const flowerSrcs = FLOWER_LIST.map((f) => f.src);
+const flowerIndices = FLOWER_LIST.map((f) => f.spriteIndex);
 ---
 
 <Base>
@@ -105,10 +105,19 @@ const flowerSrcs = FLOWER_LIST.map((f) => f.src);
     });
   </script>
 
-  <script define:vars={{ flowerSrcs }}>
+  <script define:vars={{ flowerIndices }}>
     const FLOWER_COUNT = 14;
     const MIN_SIZE = 60;
     const MAX_SIZE = 120;
+
+    const PADDING = 20;
+    const GAP = 20;
+    const CELL_W = 1244;
+    const CELL_H = 1110;
+    const COLS = 3;
+    const SPRITE_W = 3812;
+    const SPRITE_H = 3410;
+    const SPRITE_SRC = '/flowers/flowers-grid.webp';
 
     function random(min, max) {
       return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -159,6 +168,26 @@ const flowerSrcs = FLOWER_LIST.map((f) => f.src);
       return positions;
     }
 
+    function getSpriteStyle(flowerIndex, displayWidth) {
+      const col = flowerIndex % COLS;
+      const row = Math.floor(flowerIndex / COLS);
+      const contentW = CELL_W - 2;
+      const contentH = CELL_H - 2;
+      const cellX = PADDING + col * (CELL_W + GAP) + 1;
+      const cellY = PADDING + row * (CELL_H + GAP) + 1;
+      const scale = displayWidth / contentW;
+      const displayHeight = contentH * scale;
+
+      return {
+        width: displayWidth + 'px',
+        height: displayHeight + 'px',
+        backgroundImage: 'url(' + SPRITE_SRC + ')',
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: (-(cellX * scale)) + 'px ' + (-(cellY * scale)) + 'px',
+        backgroundSize: (SPRITE_W * scale) + 'px ' + (SPRITE_H * scale) + 'px',
+      };
+    }
+
     const container = document.createElement('div');
     container.id = 'flower-decoration';
     container.style.cssText = [
@@ -173,18 +202,28 @@ const flowerSrcs = FLOWER_LIST.map((f) => f.src);
     const positions = generatePositions(FLOWER_COUNT);
 
     positions.forEach((pos) => {
-      const img = document.createElement('img');
-      img.src = flowerSrcs[random(0, flowerSrcs.length - 1)];
-      img.alt = '';
-      img.style.width = `${random(MIN_SIZE, MAX_SIZE)}px`;
-      img.style.height = 'auto';
-      img.style.position = 'absolute';
-      img.style.willChange = 'transform';
-      img.style.filter = 'drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15))';
+      const idx = flowerIndices[random(0, flowerIndices.length - 1)];
+      const size = random(MIN_SIZE, MAX_SIZE);
+      const style = getSpriteStyle(idx, size);
 
-      Object.assign(img.style, pos);
+      const el = document.createElement('div');
+      el.style.cssText = [
+        'position: absolute',
+        'will-change: transform',
+        'filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15))',
+        'background-image: ' + style.backgroundImage,
+        'background-repeat: ' + style.backgroundRepeat,
+        'background-position: ' + style.backgroundPosition,
+        'background-size: ' + style.backgroundSize,
+        'width: ' + style.width,
+        'height: ' + style.height,
+        pos.top ? 'top: ' + pos.top : '',
+        pos.bottom ? 'bottom: ' + pos.bottom : '',
+        pos.left ? 'left: ' + pos.left : '',
+        pos.right ? 'right: ' + pos.right : '',
+      ].filter(Boolean).join(';');
 
-      container.appendChild(img);
+      container.appendChild(el);
     });
   </script>
 </Base>
