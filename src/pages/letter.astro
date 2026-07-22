@@ -113,13 +113,8 @@ import { generateFlowerPositions, createFlowerElements, triggerBurst } from '../
   dismissBackdrop.addEventListener('click', () => {
     if (!isOpen || isOpening) return;
 
-    flowerElements.forEach((el) => {
-      el.style.animation = '';
-      el.style.animationComposition = '';
-      el.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
-      el.style.opacity = '0';
-      el.style.transform = 'scale(0.5)';
-    });
+    flowerContainer.style.transition = 'opacity 0.5s ease';
+    flowerContainer.style.opacity = '0';
 
     setTimeout(() => {
       flowerContainer.style.display = 'none';
