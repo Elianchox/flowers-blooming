@@ -118,14 +118,6 @@ export function triggerBurst(
     ].join(', ');
     el.style.transform = 'translate(0, 0) scale(1) translate(0, 0)';
     el.style.opacity = '1';
-
-    const onEnd = (e: TransitionEvent) => {
-      if (e.propertyName !== 'transform') return;
-      el.removeEventListener('transitionend', onEnd);
-      el.style.transition = '';
-      el.style.animation = `spin-flower ${spinDur}s linear infinite`;
-      el.style.animationComposition = 'add';
-    };
-    el.addEventListener('transitionend', onEnd);
+    el.style.animation = `spin-flower ${spinDur}s linear infinite`;
   });
 }
