@@ -56,3 +56,12 @@
   from { rotate: 0deg; }
   to { rotate: 360deg; }
 }
+
+@keyframes pulse-opacity {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+.animate-pulse-opacity {
+  animation: pulse-opacity 2s ease-in-out infinite;
+}

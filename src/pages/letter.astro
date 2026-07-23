@@ -99,6 +99,13 @@ import { generateFlowerPositions, createFlowerElements, triggerBurst } from '../
           isOpen = true;
           isOpening = false;
           dismissBackdrop.style.pointerEvents = 'auto';
+          const tapText = document.getElementById('tapToContinue')!;
+          tapText.style.display = 'block';
+          tapText.style.opacity = '0';
+          tapText.offsetHeight;
+          tapText.style.transition = 'opacity 0.6s ease';
+          tapText.style.opacity = '1';
+          tapText.classList.add('animate-pulse-opacity');
         }, totalBurstTime);
       }, 300);
     }, 300);
@@ -113,7 +120,25 @@ import { generateFlowerPositions, createFlowerElements, triggerBurst } from '../
   dismissBackdrop.addEventListener('click', () => {
     if (!isOpen || isOpening) return;
 
-    flowerContainer.style.transition = 'opacity 0.5s ease';
+    const centerX = window.innerWidth / 2;
+    const ANIM_DURATION = 700;
+    const MAX_STAGGER = 250;
+
+    flowerElements.forEach((el) => {
+      const flowerX = parseFloat(el.style.left) + parseFloat(el.style.width) / 2;
+      const distFromCenter = Math.abs(flowerX - centerX);
+      const delay = (distFromCenter / centerX) * MAX_STAGGER;
+      const isLeft = flowerX < centerX;
+
+      el.style.animation = '';
+      el.style.transition = `transform ${ANIM_DURATION}ms cubic-bezier(0.87, 0, 0.13, 1) ${delay}ms, opacity ${ANIM_DURATION * 0.4}ms ease ${delay}ms`;
+      el.style.transform = `translateX(${isLeft ? '-150vw' : '150vw'})`;
+      el.style.opacity = '0';
+    });
+
+    const totalDuration = ANIM_DURATION + MAX_STAGGER;
+
+    flowerContainer.style.transition = `opacity 0.4s ease ${totalDuration - 300}ms`;
     flowerContainer.style.opacity = '0';
 
     setTimeout(() => {
@@ -123,6 +148,6 @@ import { generateFlowerPositions, createFlowerElements, triggerBurst } from '../
       helloOverlay.offsetHeight;
       helloOverlay.style.transition = 'opacity 0.5s ease';
       helloOverlay.style.opacity = '1';
-    }, 500);
+    }, totalDuration + 100);
   });
 </script>
