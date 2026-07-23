@@ -27,7 +27,7 @@ const flowerIndices = FLOWER_LIST.map((f) => f.spriteIndex);
   <fragment>
     <div id="app" class="relative min-h-screen flex items-center justify-center select-none overflow-hidden"
          style="background: url('/bgs/botanical-pattern.webp') center/cover no-repeat;">
-      <div class="absolute inset-0 bg-linear-to-br from-pink-lightest/80 to-pink-light/80"></div>
+      <div id="bgOverlay" class="absolute inset-0 bg-linear-to-br from-pink-lightest/80 to-pink-light/80"></div>
 
       <Envelope closedSrc={closedEnvelope?.src ?? ''} openedSrc={openedEnvelope?.src ?? ''} />
       <FlowerBurst />
@@ -53,6 +53,8 @@ import { generateFlowerPositions, createFlowerElements, triggerBurst } from '../
   let flowerElements: HTMLElement[] = [];
   const flowerContainer = document.getElementById('flowerContainer')!;
   const dismissBackdrop = document.getElementById('dismissBackdrop')!;
+  const appContainer = document.getElementById('app')!;
+  const bgOverlay = document.getElementById('bgOverlay')!;
   const envClosed = document.getElementById('envClosed') as HTMLImageElement;
   const envOpened = document.getElementById('envOpened') as HTMLImageElement;
   const tapText = document.getElementById('tapText')!;
@@ -78,6 +80,9 @@ import { generateFlowerPositions, createFlowerElements, triggerBurst } from '../
       envOpened.style.opacity = '1';
       tapText.style.transition = 'opacity 0.2s ease';
       tapText.style.opacity = '0';
+
+      appContainer.style.background = "url('/bg/bg_3.jpeg') center/cover no-repeat";
+      bgOverlay.style.display = 'none';
 
       if (!flowersCreated) {
         const positions = generateFlowerPositions(FLOWER_SIZE, window.innerWidth, window.innerHeight);
@@ -117,8 +122,17 @@ import { generateFlowerPositions, createFlowerElements, triggerBurst } from '../
     }
   });
 
+  function startBackgroundMusic() {
+    const container = document.createElement('div');
+    container.style.cssText = 'position:absolute;width:0;height:0;opacity:0;pointer-events:none;overflow:hidden;';
+    container.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/-e1MUKFZNNE?autoplay=1&playsinline=1" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture;web-share" allowfullscreen></iframe>`;
+    document.getElementById('app')!.appendChild(container);
+  }
+
   dismissBackdrop.addEventListener('click', () => {
     if (!isOpen || isOpening) return;
+
+    startBackgroundMusic();
 
     const centerX = window.innerWidth / 2;
     const ANIM_DURATION = 700;

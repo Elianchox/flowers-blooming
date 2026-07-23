@@ -1,0 +1,131 @@
+---
+export interface Props {
+  greeting?: string;
+  signature?: string;
+}
+
+const { greeting = "Querida...", signature = "— Con cariño" } = Astro.props;
+---
+
+<div class="digital-letter">
+  <div class="corner-flower corner-flower--top-right"></div>
+  <div class="corner-flower corner-flower--bottom-left"></div>
+  <div class="letter-header-deco"></div>
+  <div class="letter-accent"></div>
+  <div class="letter-content">
+    <p>
+      Holi, mi amor. Soy yo de nuevo, esta vez escribiendo desde el código y no
+      a mano. Lo siento si no entendiste; tengo letra de doctor sin ser doctor,
+      pero soy novio de una doctora, la mejor doctora del mundo, la mujer más
+      inteligente del mundo.
+    </p>
+    <p>
+      Gracias por existir, mi amor. Este día es un recordatorio del día en que
+      naciste y empezaste a existir. Te amo mucho, mi amor, con todo mi ser. Te
+      mereces todo en este mundo, mi amor, y yo te daré todo lo que hay en él.
+    </p>
+
+    <p>
+      Te dije que te haría la mujer más feliz del mundo, y es una promesa para
+      toda la vida. Es por eso que necesito que sigas cumpliendo muchos años
+      más, hasta llegar a viejitos, mi vida.
+    </p>
+    <p>
+      Yo seré tu compañero de vida, el amor de tu vida, tu esposo y el padre de
+      nuestros hijos, mi vida. Te amo mucho, mi vida, con todo mi ser. Eres mi
+      mundo, mi vida.
+    </p>
+    <p>¡TE AMOOOOOOOOOO!</p>
+  </div>
+</div>
+<div class="sticker">❤️</div>
+
+<style>
+  .digital-letter {
+    background: #fffef5;
+    border-radius: 2px;
+    padding: 24px 20px;
+    box-shadow: 0 3px 16px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e8ddd0;
+    rotate: -0.3deg;
+    position: relative;
+  }
+
+  .corner-flower {
+    position: absolute;
+    width: 72px;
+    height: 64px;
+    background-image: url("/flowers/flowers-grid.webp");
+    background-repeat: no-repeat;
+    background-position: -75px -1px;
+    background-size: 221px 198px;
+    animation: spin 4s linear infinite;
+    pointer-events: none;
+  }
+
+  .corner-flower--top-right {
+    top: -16px;
+    right: -16px;
+  }
+
+  .corner-flower--bottom-left {
+    bottom: -16px;
+    left: -16px;
+  }
+
+  .letter-header-deco {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: repeating-linear-gradient(
+      90deg,
+      #d4818c 0px,
+      #d4818c 30px,
+      transparent 30px,
+      transparent 36px
+    );
+  }
+
+  .letter-accent {
+    width: 28px;
+    height: 2px;
+    background: #d4818c;
+    margin-bottom: 14px;
+    border-radius: 1px;
+  }
+
+  .letter-content {
+    font-family: Georgia, serif;
+    font-size: 13px;
+    color: #4a3a2a;
+    line-height: 1.8;
+  }
+
+  .letter-content p {
+    margin: 0 0 12px 0;
+  }
+
+  .letter-content .greeting {
+    font-style: italic;
+    color: #6a4a3a;
+  }
+
+  .letter-content .signature {
+    margin-top: 16px;
+    font-style: italic;
+    text-align: right;
+    color: #6a4a3a;
+  }
+
+  .sticker {
+    position: absolute;
+    bottom: 16px;
+    right: 4px;
+    font-size: 22px;
+    rotate: 12deg;
+    pointer-events: none;
+    line-height: 1;
+  }
+</style>

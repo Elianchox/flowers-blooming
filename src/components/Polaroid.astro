@@ -1,0 +1,86 @@
+---
+export interface Props {
+  src: string;
+  alt?: string;
+  rotate?: number;
+  width?: string;
+  paddingBottom?: string;
+  aspectRatio?: string;
+  shadow?: string;
+  tape?: 'top-left' | 'top-right' | 'top-center' | 'none';
+}
+
+const {
+  src,
+  alt = 'Photo',
+  rotate = 0,
+  width = '100%',
+  paddingBottom = '35px',
+  aspectRatio = '3/4',
+  shadow = '0 4px 16px rgba(0,0,0,0.15)',
+  tape = 'none',
+} = Astro.props;
+---
+
+<div class="polaroid" style={`rotate: ${rotate}deg; width: ${width}; box-shadow: ${shadow};`}>
+    <div class="polaroid-inner" style={`padding: 12px 14px ${paddingBottom} 14px;`}>
+    <img src={src} alt={alt} loading="lazy" style={`aspect-ratio: ${aspectRatio};`} />
+  </div>
+  {
+    tape !== 'none' && (
+      <div class={`tape tape-${tape}`}></div>
+    )
+  }
+</div>
+
+<style>
+  .polaroid {
+    background: #fff;
+    border-radius: 2px;
+    border: 1.5px solid #e8ddd0;
+    position: relative;
+    display: inline-flex;
+    flex-shrink: 0;
+  }
+
+  .polaroid-inner {
+    border-radius: 1px;
+    overflow: hidden;
+    line-height: 0;
+  }
+
+  .polaroid-inner img {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+
+  .tape {
+    position: absolute;
+    width: 28px;
+    height: 9px;
+    background: rgba(200, 180, 160, 0.5);
+    border-radius: 1px;
+    pointer-events: none;
+  }
+
+  .tape-top-left {
+    top: -4px;
+    left: 30%;
+    rotate: -4deg;
+  }
+
+  .tape-top-right {
+    top: -4px;
+    right: 30%;
+    rotate: 4deg;
+  }
+
+  .tape-top-center {
+    top: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    rotate: 1deg;
+  }
+</style>
