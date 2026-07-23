@@ -36,7 +36,7 @@ const SPRITE_W = 3812;
 const SPRITE_H = 3410;
 const SPRITE_SRC = '/flowers/flowers-grid.webp';
 
-function getSpriteStyle(flowerIndex: number, displayWidth: number) {
+export function getSpriteStyle(flowerIndex: number, displayWidth: number) {
   const col = flowerIndex % COLS;
   const row = Math.floor(flowerIndex / COLS);
   const contentW = CELL_W - 2;

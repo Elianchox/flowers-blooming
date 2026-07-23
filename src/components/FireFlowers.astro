@@ -1,0 +1,114 @@
+---
+export type FireFlowersSize = 'sm' | 'md' | 'lg';
+
+const { size = 'sm' } = Astro.props as { size?: FireFlowersSize };
+
+const sizeMap = {
+  sm: { petal: 16, travel: 120 },
+  md: { petal: 24, travel: 200 },
+  lg: { petal: 36, travel: 320 },
+};
+
+const { petal: petalPx, travel: travelPx } = sizeMap[size];
+---
+
+<div class="fireflowers" style="position:absolute;inset:0;" data-petal={petalPx} data-travel={travelPx}></div>
+
+<style>
+  .fireflowers {
+    pointer-events: none;
+    overflow: visible;
+    z-index: 5;
+  }
+  .flower-particle {
+    position: absolute;
+    pointer-events: none;
+    will-change: transform, opacity;
+  }
+  @keyframes fire-explode {
+    0% {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.3);
+    }
+    12% {
+      opacity: 1;
+    }
+    60% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      transform: translate(-50%, -50%) var(--fire-target) scale(1);
+    }
+  }
+</style>
+
+<script>
+import { getSpriteStyle } from '../scripts/burst-engine';
+
+  const FLOWER_TYPES = 9;
+  const PARTICLE_COUNT = 20;
+  const ANIM_DURATION = 1200;
+  const MIN_INTERVAL = 2000;
+  const MAX_INTERVAL = 4000;
+
+  function randomAngle() {
+    return Math.PI * 2 * Math.random();
+  }
+
+  function initFireflowers(container) {
+    const petalPx = parseInt(container.dataset.petal ?? '16');
+    const travelPx = parseInt(container.dataset.travel ?? '80');
+    let timer = 0;
+
+    function createExplosion() {
+      const rect = container.getBoundingClientRect();
+      const cx = rect.width / 2;
+      const cy = rect.height / 2;
+
+      for (let i = 0; i < PARTICLE_COUNT; i++) {
+        const angle = randomAngle();
+        const dist = travelPx * (0.5 + Math.random() * 0.5);
+        const tx = Math.cos(angle) * dist;
+        const ty = Math.sin(angle) * dist - dist * 0.15;
+        const flowerIdx = Math.floor(Math.random() * FLOWER_TYPES);
+        const style = getSpriteStyle(flowerIdx, petalPx);
+
+        const el = document.createElement('div');
+        el.className = 'flower-particle';
+        el.style.width = style.width;
+        el.style.height = style.height;
+        el.style.left = cx + 'px';
+        el.style.top = cy + 'px';
+        el.style.backgroundImage = style.backgroundImage;
+        el.style.backgroundRepeat = style.backgroundRepeat;
+        el.style.backgroundPosition = style.backgroundPosition;
+        el.style.backgroundSize = style.backgroundSize;
+
+        const stagger = Math.random() * 200;
+        el.style.animation = 'fire-explode ' + ANIM_DURATION + 'ms cubic-bezier(0.25, 0.46, 0.45, 0.94) ' + stagger + 'ms forwards';
+      el.style.setProperty('--fire-target', 'translate(' + tx + 'px, ' + ty + 'px)');
+      el.style.transform = 'translate(-50%, -50%) scale(0.3)';
+      el.style.opacity = '0';
+
+        container.appendChild(el);
+
+        setTimeout(function () {
+          if (el.parentNode) el.remove();
+        }, ANIM_DURATION + stagger);
+      }
+    }
+
+    function scheduleNext() {
+      const delay = MIN_INTERVAL + Math.random() * (MAX_INTERVAL - MIN_INTERVAL);
+      timer = setTimeout(function () {
+        createExplosion();
+        scheduleNext();
+      }, delay);
+    }
+
+    scheduleNext();
+  }
+
+  document.querySelectorAll('.fireflowers').forEach(initFireflowers);
+</script>
