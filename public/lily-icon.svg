@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="petalGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fff"/>
+      <stop offset="100%" stop-color="#f0e6d3"/>
+    </linearGradient>
+    <linearGradient id="centerGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#f5d742"/>
+      <stop offset="100%" stop-color="#e8a820"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="96" fill="#4a7c59"/>
+  <g transform="translate(256,260)">
+    <path d="M0-30 C-15-120 -50-170 -40-200 C-30-230 0-200 0-160 C0-200 30-230 40-200 C50-170 15-120 0-30Z" fill="#fff" stroke="#e8d5b0" stroke-width="1.5"/>
+    <path d="M0-30 C-15-120 -50-170 -40-200 C-30-230 0-200 0-160 C0-200 30-230 40-200 C50-170 15-120 0-30Z" fill="url(#petalGrad)" opacity="0.95"/>
+    <path d="M0-20 C-20-90 -60-140 -55-175 C-50-200 -20-175 0-140Z" fill="#fff" opacity="0.4"/>
+    <path d="M0-20 C20-90 60-140 55-175 C50-200 20-175 0-140Z" fill="#fff" opacity="0.4"/>
+
+    <path d="M-35-15 C-80-80 -130-110 -150-100 C-170-90 -135-55 -90-30Z" fill="#fff" stroke="#e8d5b0" stroke-width="1.5" transform="rotate(-40)"/>
+    <path d="M-35-15 C-80-80 -130-110 -150-100 C-170-90 -135-55 -90-30Z" fill="url(#petalGrad)" opacity="0.85" transform="rotate(-40)"/>
+    <path d="M-30-10 C-70-65 -115-90 -130-80 C-145-70 -115-45 -75-25Z" fill="#fff" opacity="0.35" transform="rotate(-40)"/>
+
+    <path d="M35-15 C80-80 130-110 150-100 C170-90 135-55 90-30Z" fill="#fff" stroke="#e8d5b0" stroke-width="1.5" transform="rotate(40)"/>
+    <path d="M35-15 C80-80 130-110 150-100 C170-90 135-55 90-30Z" fill="url(#petalGrad)" opacity="0.85" transform="rotate(40)"/>
+    <path d="M30-10 C70-65 115-90 130-80 C145-70 115-45 75-25Z" fill="#fff" opacity="0.35" transform="rotate(40)"/>
+
+    <path d="M-25-10 C-70-60 -120-80 -135-70 C-150-60 -120-30 -80-10Z" fill="#fff" stroke="#e8d5b0" stroke-width="1.5" transform="rotate(-80)"/>
+    <path d="M-25-10 C-70-60 -120-80 -135-70 C-150-60 -120-30 -80-10Z" fill="url(#petalGrad)" opacity="0.8" transform="rotate(-80)"/>
+
+    <path d="M25-10 C70-60 120-80 135-70 C150-60 120-30 80-10Z" fill="#fff" stroke="#e8d5b0" stroke-width="1.5" transform="rotate(80)"/>
+    <path d="M25-10 C70-60 120-80 135-70 C150-60 120-30 80-10Z" fill="url(#petalGrad)" opacity="0.8" transform="rotate(80)"/>
+
+    <ellipse cx="0" cy="-8" rx="10" ry="14" fill="url(#centerGrad)"/>
+    <ellipse cx="0" cy="-8" rx="7" ry="10" fill="#f5d742" opacity="0.6"/>
+
+    <line x1="0" y1="-22" x2="0" y2="-45" stroke="#e8a820" stroke-width="2.5" stroke-linecap="round"/>
+    <circle cx="0" cy="-46" r="3.5" fill="#c47a2a"/>
+    <circle cx="0" cy="-46" r="1.5" fill="#e8a820"/>
+
+    <line x1="8" y1="-20" x2="20" y2="-38" stroke="#e8a820" stroke-width="2" stroke-linecap="round" transform="rotate(15)"/>
+    <circle cx="20" cy="-39" r="3" fill="#c47a2a" transform="rotate(15)"/>
+    <line x1="-8" y1="-20" x2="-20" y2="-38" stroke="#e8a820" stroke-width="2" stroke-linecap="round" transform="rotate(-15)"/>
+    <circle cx="-20" cy="-39" r="3" fill="#c47a2a" transform="rotate(-15)"/>
+
+    <line x1="12" y1="-16" x2="30" y2="-30" stroke="#e8a820" stroke-width="1.8" stroke-linecap="round" transform="rotate(30)"/>
+    <circle cx="30" cy="-31" r="2.5" fill="#c47a2a" transform="rotate(30)"/>
+    <line x1="-12" y1="-16" x2="-30" y2="-30" stroke="#e8a820" stroke-width="1.8" stroke-linecap="round" transform="rotate(-30)"/>
+    <circle cx="-30" cy="-31" r="2.5" fill="#c47a2a" transform="rotate(-30)"/>
+  </g>
+</svg>
